@@ -20,6 +20,8 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 rover_simulation = None
 simulation_thread = None
 simulation_running = False
+is_delivering_aid = False
+aid_delivery_start_time = 0
 
 # Rover data structure
 rover_data = {
@@ -46,7 +48,7 @@ def add_log_entry(message, level="info"):
 
 def simulation_loop():
     """Autonomous rover simulation loop"""
-    global simulation_running, rover_simulation, rover_data
+    global simulation_running, rover_simulation, rover_data, is_delivering_aid, aid_delivery_start_time
     
     try:
         # Start a session
@@ -64,15 +66,25 @@ def simulation_loop():
         update_sensor_data()
         
         # Battery thresholds
-        RECHARGE_START = rover_simulation.RECHARGE_START  # Start recharging at 5%
-        RECHARGE_STOP = rover_simulation.RECHARGE_STOP  # Stop recharging at 80%
-        COMMS_LOSS = rover_simulation.COMMS_LOSS  # Communication lost below 10%
+        RECHARGE_START = 5  # Start recharging at 5%
+        RECHARGE_STOP = 80  # Stop recharging at 80%
+        COMMS_LOSS = 10  # Communication lost below 10%
         
         while simulation_running:
             # Update rover status and sensor data
             update_rover_status()
             update_sensor_data()
             
+            # Handle aid delivery
+            current_time = time.time()
+            if is_delivering_aid and (current_time - aid_delivery_start_time) >= 5:
+                # Aid delivery complete after 5 seconds
+                is_delivering_aid = False
+                add_log_entry("Aid delivery complete. Resuming exploration.", "success")
+                rover_data["status"] = "Aid Delivered"
+                socketio.emit('status_update', rover_data)
+                time.sleep(1)  # Brief pause before resuming
+                
             # Handle battery management
             if rover_data["battery"] <= RECHARGE_START and rover_simulation.status.lower() != "charging":
                 # Battery critically low, start charging
@@ -113,7 +125,7 @@ def simulation_loop():
                 move_rover()
             
             # If not charging and battery is above minimum, move randomly
-            if rover_simulation.status.lower() != "charging" and rover_data["battery"] > COMMS_LOSS:
+            if rover_simulation.status.lower() != "charging" and rover_data["battery"] > COMMS_LOSS and not is_delivering_aid:
                 # Move in a random direction
                 move_rover()
             elif rover_simulation.status.lower() == "charging":
@@ -166,7 +178,7 @@ def update_rover_status():
 
 def update_sensor_data():
     """Update sensor data from the simulation"""
-    global rover_data, rover_simulation
+    global rover_data, rover_simulation, is_delivering_aid, aid_delivery_start_time
     
     if not rover_simulation:
         add_log_entry("No active simulation.", "error")
@@ -203,9 +215,19 @@ def update_sensor_data():
             if rfid.get("tag_detected", False):
                 # Simulate finding a survivor at current position
                 current_pos = [pos["x"], pos["y"]]
-                if current_pos not in rover_data["survivors_found"]:
+                if current_pos not in rover_data["survivors_found"] and not is_delivering_aid:
                     rover_data["survivors_found"].append(current_pos)
                     add_log_entry(f"Survivor found at position X={pos['x']}, Y={pos['y']}!", "success")
+                    
+                    # Start aid delivery process
+                    rover_simulation.stop_rover()  # Stop the rover
+                    rover_data["status"] = "Delivering Aid"
+                    socketio.emit('status_update', rover_data)
+                    add_log_entry("Rover stopped. Delivering aid to survivor...", "info")
+                    
+                    # Set aid delivery flags
+                    is_delivering_aid = True
+                    aid_delivery_start_time = time.time()
             
             # Update path history if position changed
             current_pos = [pos["x"], pos["y"]]

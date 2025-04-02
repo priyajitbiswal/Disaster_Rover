@@ -125,16 +125,20 @@ body {
     color: #6c757d;
 }
 
-/* Survivor count animation */
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.5); }
-    100% { transform: scale(1); }
+/* Survivor found animation */
+.survivor-found {
+    animation: pulse 1s ease-in-out 3;
 }
 
-.survivor-found {
-    animation: pulse 0.5s ease-in-out;
-    animation-iteration-count: 2;
+/* Aid delivery animation */
+.aid-delivery {
+    animation: pulse 0.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }
 
 /* Movement History */

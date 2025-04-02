@@ -352,6 +352,22 @@ function updateStatus(data) {
     // Update status badge color
     if (data.status && data.status.toLowerCase().includes('connection lost')) {
         roverStatus.className = 'status-value badge bg-danger';
+    } else if (data.status && data.status.toLowerCase().includes('delivering aid')) {
+        roverStatus.className = 'status-value badge bg-info';
+        // Add a visual effect for aid delivery
+        addLogEntry({
+            timestamp: new Date().toLocaleTimeString(),
+            message: "Delivering aid to survivor...",
+            level: 'info'
+        });
+    } else if (data.status && data.status.toLowerCase().includes('aid delivered')) {
+        roverStatus.className = 'status-value badge bg-success';
+        // Add a visual effect for aid delivery complete
+        addLogEntry({
+            timestamp: new Date().toLocaleTimeString(),
+            message: "Aid successfully delivered!",
+            level: 'success'
+        });
     } else if (data.status && data.status.toLowerCase().includes('recharging')) {
         roverStatus.className = 'status-value badge bg-warning text-dark';
     } else if (data.status && data.status.toLowerCase().includes('charging')) {
