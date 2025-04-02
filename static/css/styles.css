@@ -1,0 +1,267 @@
+/* Main Styles */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+}
+
+/* Status Panel */
+.status-item {
+    margin-bottom: 15px;
+}
+
+.status-label {
+    font-weight: bold;
+    display: inline-block;
+    width: 100px;
+}
+
+.status-value {
+    font-family: 'Courier New', monospace;
+}
+
+/* Sensor Panel */
+.sensor-panel {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px;
+    height: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sensor-title {
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e9ecef;
+    color: #495057;
+    font-size: 1rem;
+}
+
+.sensor-item {
+    margin-bottom: 8px;
+}
+
+.sensor-label {
+    font-weight: bold;
+    display: inline-block;
+    width: 100px;
+}
+
+.sensor-value {
+    font-family: 'Courier New', monospace;
+}
+
+/* Map Panel */
+.map-container {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+}
+
+#roverMap {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.map-legend {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+}
+
+.legend-color {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+/* Survivors Panel */
+.survivors-container {
+    padding: 5px;
+}
+
+.survivors-count-value h2 {
+    font-size: 2rem;
+}
+
+.survivors-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.survivor-item {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-left: 3px solid #dc3545;
+}
+
+.survivor-position {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
+
+.survivor-time {
+    font-size: 0.8em;
+    color: #6c757d;
+}
+
+/* Survivor count animation */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.5); }
+    100% { transform: scale(1); }
+}
+
+.survivor-found {
+    animation: pulse 0.5s ease-in-out;
+    animation-iteration-count: 2;
+}
+
+/* Movement History */
+.movement-history-container {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.movement-list {
+    padding-left: 0;
+}
+
+.movement-item {
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    border-left: 3px solid #6c757d;
+    background-color: #f8f9fa;
+}
+
+.movement-direction {
+    font-weight: bold;
+}
+
+.movement-time {
+    font-size: 0.8em;
+    color: #6c757d;
+}
+
+/* Log Panel */
+.log-container {
+    height: 500px;
+    overflow-y: auto;
+    background-color: #212529;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: 'Courier New', monospace;
+}
+
+.log-entries {
+    color: #f8f9fa;
+}
+
+.log-entry {
+    margin-bottom: 5px;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.log-timestamp {
+    color: #adb5bd;
+    margin-right: 5px;
+}
+
+.log-info {
+    color: #17a2b8;
+}
+
+.log-success {
+    color: #28a745;
+}
+
+.log-warning {
+    color: #ffc107;
+}
+
+.log-error {
+    color: #dc3545;
+}
+
+/* Path Visualization */
+.path-visualization-container {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.legend-color {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+
+/* Battery charging animation */
+.battery-charging {
+    position: relative;
+}
+
+.battery-charging::after {
+    content: "\f0e7"; /* Lightning bolt icon */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    animation: charging-pulse 1s infinite;
+}
+
+@keyframes charging-pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+/* Critical battery warning */
+.battery-critical {
+    animation: critical-pulse 0.5s infinite;
+}
+
+@keyframes critical-pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .status-label, .sensor-label {
+        width: 80px;
+    }
+}
